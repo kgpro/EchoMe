@@ -1,0 +1,112 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+  background-image: url("img_2.png");
+  background-size: cover; /* Scaling to cover body element */
+  background-repeat: no-repeat;
+  resize: none;
+}
+
+.home-link {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width:450px;
+   margin: 100px auto;
+  padding-top: 10px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.51);
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  position: relative; /* Position relative to attach elements */
+}
+
+h2 {
+  font-size: 40px;
+  font-family: "Arial Rounded MT Bold";
+  color: darkred;
+  margin: 30px 0 40px; /* Increased space above h2 */
+    text-transform: capitalize;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px; /* Added space above form */
+}
+
+input {
+  height: 30px; /* Increased height of inputs */
+  width: 150%; /* Adjusted width of inputs */
+  border: none;
+  border-bottom: 2px solid #9f0000; /* Corrected border syntax */
+  outline: none;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"] {
+  margin-bottom: 10px;
+  background-color: transparent;
+  font-size: 20px;
+}
+
+input[type="submit"] {
+  height: 50px; /* Increased height of button */
+  width: 100px; /* Adjusted width of button */
+  font-size: 20px; /* Increased font size of button */
+  background-color: darkred; /* Changed button color */
+  color: white; /* Changed button text color */
+  border: none;
+  border-radius: 5px; /* Added border radius to button */
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth transition on hover */
+  margin-bottom: 30px;
+}
+
+input[type="submit"]:hover {
+  background-color: #9f0000; /* Darken button color on hover */
+  color: white;
+}
+
+#logo {
+  height: 100px;
+  width: auto;
+}
+
+.social-links {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  margin: 10px;
+}
+
+.social-links a {
+  margin-right: 10px;
+  text-decoration: none;
+}
+footer{
+    margin-top: 20px;
+}
+.login-link {
+    text-decoration: none;
+    color: blue;
+}
+select{
+  height: 20px;
+  margin-left: 0px;
+}

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoMe - Time Capsule for Your Future Self</title>
+    <meta name="description" content="Send encrypted messages to your future self with EchoMe. Secure time capsules delivered to your email when you choose.">
+    <meta name="keywords" content="time capsule, future message, encrypted message, email future self">
+    <meta name="author" content="EchoMe Team">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="EchoMe - Send a Message to Your Future Self">
+    <meta property="og:description" content="Create encrypted time capsules that unlock on your chosen date.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://echome.example.com">
+    <meta property="og:image" content="https://echome.example.com/preview.jpg">
+
+    <!-- CSS -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        :root {
+            --primary: #e74c3c;
+            --primary-dark: #c0392b;
+            --secondary: #6c5ce7;
+            --accent: #f1c40f;
+            --light: #f9f9f9;
+            --dark: #2c3e50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --success: #27ae60;
+            --error: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 15px;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: white;
+            appearance: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
+        .select-arrow {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--dark);
+            pointer-events: none;
+        }
+
+        .input-container {
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .textarea-wrapper {
+            position: relative;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            resize: vertical;
+            min-height: 120px;
+            transition: all 0.3s;
+            background-color: white;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
+        .textarea-corner {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 15px;
+            height: 15px;
+            border-bottom: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+            border-radius: 0 0 5px 0;
+            opacity: 0.5;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background-color: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
+        .input-highlight {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0;
+            background: var(--primary);
+            transition: width 0.4s ease;
+        }
+
+        .form-input:focus ~ .input-highlight {
+            width: 100%;
+        }
+
+        .audio-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .record-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(108, 92, 231, 0.2);
+        }
+
+        .record-btn:hover {
+            background: #5a4bcf;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(108, 92, 231, 0.3);
+        }
+
+        .record-btn:active {
+            transform: translateY(0);
+        }
+
+        .recording-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .pulse-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        #audioPlayback {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+
+        .submit-container {
+            position: relative;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+            border-radius: 50px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .submit-btn:hover::before {
+            opacity: 1;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn.submitted {
+            background: linear-gradient(135deg, var(--success), #2ecc71);
+            color: white;
+            cursor: default;
+            position: relative;
+        }
+
+        .floating-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-icons div {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+
+        .icon-1 {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .icon-2 {
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+        }
+
+        .icon-3 {
+            top: 80%;
+            left: 20%;
+            animation-delay: 6s;
+        }
+
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: none;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--dark);
+            margin-top: 15px;
+        }
+
+        /* Status message */
+        .status-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-message.show {
+            opacity: 1;
+        }
+
+        .status-message.success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .status-message.error {
+            background-color: var(--error);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .form-fade {
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .submit-btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>📬 Send a Message to the Future</h2>
+            <div class="divider"></div>
+        </div>
+
+        <form id="timeCapsuleForm" class="form-fade"  enctype="multipart/form-data">
+            
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="inputType" class="form-label">Choose message type:</label>
+                <div class="select-wrapper">
+                    <select id="inputType" name="inputType" class="form-select">
+                        <option value="text">✏️ Text Message</option>
+                        <option value="audio">🎤 Voice Message</option>
+                    </select>
+                    <div class="select-arrow"></div>
+                </div>
+            </div>
+
+            <div id="textInputContainer" class="input-container">
+                <label for="textMessage" class="form-label">📝 Type your message:</label>
+                <div class="textarea-wrapper">
+                    <textarea id="textMessage" name="textMessage" rows="4" placeholder="Write something amazing for your future self..." class="form-textarea"></textarea>
+                    <div class="textarea-corner"></div>
+                </div>
+            </div>
+
+            <div id="audioInputContainer" class="input-container" style="display:none;">
+                <label class="form-label">🎙️ Record your voice message:</label>
+                <div class="audio-controls">
+                    <button type="button" id="recordBtn" class="record-btn">
+                        <span class="icon">🎙️</span>
+                        <span class="text">Start Recording</span>
+                    </button>
+                    <div class="recording-indicator" id="recIndicator" style="display:none;">
+                        <div class="pulse-dot"></div>
+                        <span>Recording...</span>
+                    </div>
+                </div>
+                <audio id="audioPlayback" controls style="display:none;"></audio>
+                <input type="hidden" id="audioData" name="audioData">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">⏰ When should the message unlock?</label>
+                <div class="select-wrapper">
+                    <select id="timeSelect" class="form-select">
+                        <option value="31536000">After 1 Year</option>
+                        <option value="157680000">After 5 Years</option>
+                        <option value="custom">Custom Date & Time</option>
+                    </select>
+                    <div class="select-arrow"></div>
+                </div>
+            </div>
+
+            <div class="form-group" id="customDatetimeContainer" style="display:none;">
+                <label for="customDatetime" class="form-label">📅 Select a Date & Time:</label>
+                <input type="datetime-local" id="customDatetime" name="customDatetime" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">📧 Where should we deliver your message?</label>
+                <div class="input-wrapper">
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com" class="form-input">
+                    <div class="input-highlight"></div>
+                </div>
+            </div>
+
+            <div class="submit-container">
+                <button type="submit" id="submitBtn" class="submit-btn">Seal Time Capsule</button>
+                <div class="confetti-container" id="confetti"></div>
+            </div>
+        </form>
+
+        <div class="floating-icons">
+            <div class="icon-1">✉️</div>
+            <div class="icon-2">⏳</div>
+            <div class="icon-3">🔮</div>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Sealing your time capsule...</div>
+    </div>
+
+    <!-- Status message -->
+    <div class="status-message" id="statusMessage"></div>
+
+    <!-- CryptoJS library for encryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <script>
+        const getCSRFToken = () => {
+         return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+         };
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form elements
+            const inputTypeSelect = document.getElementById('inputType');
+            const textInputContainer = document.getElementById('textInputContainer');
+            const audioInputContainer = document.getElementById('audioInputContainer');
+            const recordBtn = document.getElementById('recordBtn');
+            const audioPlayback = document.getElementById('audioPlayback');
+            const audioDataInput = document.getElementById('audioData');
+            const recIndicator = document.getElementById('recIndicator');
+            const form = document.getElementById('timeCapsuleForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const confettiContainer = document.getElementById('confetti');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const statusMessage = document.getElementById('statusMessage');
+            const timeSelect = document.getElementById('timeSelect');
+            const customDatetimeContainer = document.getElementById('customDatetimeContainer');
+            const customDatetimeInput = document.getElementById('customDatetime');
+
+            let mediaRecorder;
+            let audioChunks = [];
+            let isRecording = false;
+
+            // Toggle between text and audio input
+            inputTypeSelect.addEventListener('change', () => {
+                const type = inputTypeSelect.value;
+                if (type === 'text') {
+                    textInputContainer.style.display = 'block';
+                    audioInputContainer.style.display = 'none';
+                } else {
+                    textInputContainer.style.display = 'none';
+                    audioInputContainer.style.display = 'block';
+                }
+            });
+
+            // Handle time selection
+            timeSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customDatetimeContainer.style.display = 'block';
+                    // Set min date to tomorrow
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    const tomorrowStr = tomorrow.toISOString().slice(0, 16);
+                    customDatetimeInput.min = tomorrowStr;
+                } else {
+                    customDatetimeContainer.style.display = 'none';
+                }
+            });
+
+            // Audio recording functionality
+            recordBtn.addEventListener('click', toggleRecording);
+
+            async function toggleRecording() {
+                if (!isRecording) {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        mediaRecorder = new MediaRecorder(stream);
+                        audioChunks = [];
+
+                        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                        mediaRecorder.onstop = () => {
+                            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                audioDataInput.value = reader.result;
+                            };
+                            reader.readAsDataURL(audioBlob);
+
+                            const audioURL = URL.createObjectURL(audioBlob);
+                            audioPlayback.src = audioURL;
+                            audioPlayback.style.display = 'block';
+
+                            // Stop all tracks in the stream
+                            stream.getTracks().forEach(track => track.stop());
+                        };
+
+                        mediaRecorder.start();
+                        recordBtn.innerHTML = '<span class="icon">⏹️</span><span class="text">Stop Recording</span>';
+                        recordBtn.style.background = 'var(--primary)';
+                        recIndicator.style.display = 'flex';
+                        isRecording = true;
+                    } catch (err) {
+                        console.error('Error accessing microphone:', err);
+                        showStatusMessage('Could not access microphone. Please check permissions.', 'error');
+                    }
+                } else {
+                    mediaRecorder.stop();
+                    recordBtn.innerHTML = '<span class="icon">🎙️</span><span class="text">Start Recording</span>';
+                    recordBtn.style.background = 'var(--secondary)';
+                    recIndicator.style.display = 'none';
+                    isRecording = false;
+                }
+            }
+
+            // Form submission with encryption
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Show loading overlay
+                loadingOverlay.classList.add('active');
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Sealing...";
+
+                try {
+                    // Get form data
+                    const messageType = inputTypeSelect.value;
+                    const email = document.getElementById('email').value;
+                    let messageContent, fileType;
+
+                    // Calculate unlock time in seconds from now
+                    let unlockTimeSeconds;
+                    if (timeSelect.value === 'custom') {
+                        const selectedDate = new Date(customDatetimeInput.value);
+                        const now = new Date();
+                        unlockTimeSeconds = Math.floor((selectedDate - now) / 1000);
+
+                        if (unlockTimeSeconds <= 0) {
+                            throw new Error('Please select a future date and time');
+                        }
+                    } else {
+                        unlockTimeSeconds = parseInt(timeSelect.value);
+                    }
+
+                    // Generate a random password for encryption
+                    const encryptionPassword = generateRandomPassword(32);
+
+                    // Prepare data based on message type
+                    if (messageType === 'text') {
+                        messageContent = document.getElementById('textMessage').value;
+                        fileType = 'text/plain';
+
+                        if (!messageContent.trim()) {
+                            throw new Error('Please enter a message');
+                        }
+                    } else {
+                        if (!audioDataInput.value) {
+                            throw new Error('Please record an audio message');
+                        }
+
+                        // Convert base64 audio to ArrayBuffer
+                        const audioBase64 = audioDataInput.value.split(',')[1];
+                        messageContent = base64ToArrayBuffer(audioBase64);
+                        fileType = 'audio/webm';
+                    }
+
+                    // Encrypt the content
+                    let encryptedData;
+                    if (messageType === 'text') {
+                        encryptedData = encryptText(messageContent, encryptionPassword);
+                    } else {
+                        encryptedData = encryptBinary(messageContent, encryptionPassword);
+                    }
+
+                    // Create FormData for submission
+                    const formData = new FormData();
+                    formData.append('email', email);
+                    formData.append('unlock_time', unlockTimeSeconds.toString());
+                    formData.append('password', encryptionPassword);
+                    formData.append('file_type', fileType);
+
+                    // Add encrypted data as a file
+                    const encryptedBlob = new Blob([encryptedData], { type: 'application/octet-stream' });
+                    formData.append('encrypted_file', encryptedBlob, 'encrypted_message.dat');
+
+                    // Submit to backend
+                    const response = await fetch("{% url 'process_secure_upload' %}", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                                    'X-CSRFToken': getCookie('csrftoken')
+                                }
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showStatusMessage('✨ Your time capsule has been sealed! Your future self will thank you.', 'success');
+                        form.reset();
+                        if (audioPlayback) {
+                            audioPlayback.style.display = 'none';
+                        }
+                        createConfetti();
+                    } else {
+                        throw new Error(result.error || 'Failed to seal time capsule');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showStatusMessage(`❌ Error: ${error.message}`, 'error');
+                } finally {
+                    // Hide loading overlay
+                    setTimeout(() => {
+                        loadingOverlay.classList.remove('active');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = "Seal Time Capsule";
+                    }, 1000);
+                }
+            });
+
+            // Helper functions
+            function generateRandomPassword(length) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+
+            function base64ToArrayBuffer(base64) {
+                const binaryString = atob(base64);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes;
+            }
+
+            function encryptText(text, password) {
+                // Generate random salt (64 bits)
+                const salt = CryptoJS.lib.WordArray.random(8);
+
+                // Derive key and IV using PBKDF2
+                const keyAndIv = CryptoJS.PBKDF2(password, salt, {
+                    keySize: 48 / 4, // 256-bit key + 128-bit IV
+                    iterations: 1000,
+                    hasher: CryptoJS.algo.SHA256
+                });
+
+                const key = CryptoJS.lib.WordArray.create(keyAndIv.words.slice(0, 8)); // First 256 bits
+                const iv = CryptoJS.lib.WordArray.create(keyAndIv.words.slice(8, 12)); // Next 128 bits
+
+                // Encrypt the text
+                const encrypted = CryptoJS.AES.encrypt(text, key, {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+
+                // Combine salt + IV + ciphertext
+                const result = CryptoJS.lib.WordArray.create()
+                    .concat(salt)
+                    .concat(iv)
+                    .concat(encrypted.ciphertext);
+
+                return result.toString(CryptoJS.enc.Base64);
+            }
+
+            function encryptBinary(data, password) {
+                // Convert ArrayBuffer to WordArray
+                const wordArray = CryptoJS.lib.WordArray.create(data);
+
+                // Generate random salt (64 bits)
+                const salt = CryptoJS.lib.WordArray.random(8);
+
+                // Derive key and IV using PBKDF2
+                const keyAndIv = CryptoJS.PBKDF2(password, salt, {
+                    keySize: 48 / 4, // 256-bit key + 128-bit IV
+                    iterations: 1000,
+                    hasher: CryptoJS.algo.SHA256
+                });
+
+                const key = CryptoJS.lib.WordArray.create(keyAndIv.words.slice(0, 8)); // First 256 bits
+                const iv = CryptoJS.lib.WordArray.create(keyAndIv.words.slice(8, 12)); // Next 128 bits
+
+                // Encrypt the binary data
+                const encrypted = CryptoJS.AES.encrypt(wordArray, key, {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+
+                // Combine salt + IV + ciphertext
+                const result = CryptoJS.lib.WordArray.create()
+                    .concat(salt)
+                    .concat(iv)
+                    .concat(encrypted.ciphertext);
+
+                // Convert to ArrayBuffer for file upload
+                const resultBase64 = result.toString(CryptoJS.enc.Base64);
+                return base64ToArrayBuffer(resultBase64);
+            }
+
+            function createConfetti() {
+                confettiContainer.style.display = 'block';
+                confettiContainer.innerHTML = '';
+
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'absolute';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = getRandomColor();
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.opacity = '0.8';
+                    confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+
+                    const animation = confetti.animate([
+                        { top: '-10px', opacity: 0 },
+                        { top: Math.random() * 100 + '%', opacity: 0.8 },
+                        { top: '100%', opacity: 0 }
+                    ], {
+                        duration: 2000 + Math.random() * 3000,
+                        easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                    });
+
+                    confettiContainer.appendChild(confetti);
+
+                    animation.onfinish = () => {
+                        confetti.remove();
+                    };
+                }
+
+                setTimeout(() => {
+                    confettiContainer.style.display = 'none';
+                }, 3000);
+            }
+
+            function getRandomColor() {
+                const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#1abc9c'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            function showStatusMessage(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = `status-message ${type} show`;
+
+                setTimeout(() => {
+                    statusMessage.classList.remove('show');
+                }, 5000);
+            }
+
+            // Add subtle hover effects to all interactive elements
+            const interactiveElements = document.querySelectorAll('button, input, textarea, select');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    el.style.transition = 'all 0.2s ease';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

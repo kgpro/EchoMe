@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Members</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .member-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .member-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .social-links a {
+            margin: 0 5px;
+            color: #0077cc;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .member-card {
+                padding: 10px;
+            }
+            .member-photo {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="team-grid">
+        <div class="member-card"> 
+            <img src="placeholder.jpg" alt="Member 1" class="member-photo">
+            <img src="https://via.placeholder.com/150?text=JohnDoe" alt="John Doe" class="member-photo">
+            <div class="member-name">John Doe</div> 
+            <div class="member-role">Frontend Developer</div>
+            <div class="social-links">
+                <a href="https://github.com/johndoe" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/johndoe" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+        <div class="member-card">
+             <img src="https://via.placeholder.com/150?text=JaneSmith" alt="Jane Smith" class="member-photo">
+
+            <div class="member-name">Jane Smith</div>
+            <div class="member-role">Backend Developer</div>
+            <div class="social-links">
+                <a href="https://github.com/janesmith" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/janesmith" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+         <div class="member-card">
+             <img src="https://via.placeholder.com/150?text=MikeBrown" alt="Mike Brown" class="member-photo">
+
+            <div class="member-name">Mike Brown</div>
+            <div class="member-role">UX/UI Designer</div>
+            <div class="social-links">
+                <a href="https://github.com/mikebrown" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/mikebrown" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+        <div class="member-card">
+             <img src="https://via.placeholder.com/150?text=EmilyWilson" alt="Emily Wilson" class="member-photo">
+
+            <div class="member-name">Emily Wilson</div>
+            <div class="member-role">Project Manager</div>
+            <div class="social-links">
+                <a href="https://github.com/emilywilson" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/emilywilson" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

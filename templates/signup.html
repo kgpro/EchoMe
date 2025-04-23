@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link rel="stylesheet" href="static/signup.css">
+</head>
+<body>
+     <a href="bar.html" class="home-link" target="_blank">Home</a>
+    <div class="container">
+        <h2>Signup</h2>
+        <form action="#" method="post" onsubmit="return validateForm()">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" id="password" name="password" placeholder="Password" required><br>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required><br>
+            <input type="email" name="email" placeholder="Email" required><br>
+            <br>
+            <input type="tel" name="phone" placeholder="Phone Number" required><br>
+            <input type="submit" value="Signup">
+        </form>
+        <p>Aready registered?<a href="LOGIN%20PAGE.html" target="_blank">login</a> </p>
+    </div>
+    <footer>
+        <p>&copy; 2024 Your Creativity Share App. All rights reserved.</p>
+        <a href="#" class="login-link">Login</a>
+    </footer>
+
+    <script>
+        function validateForm() {
+            var password = document.getElementById("password").value;
+            var confirm_password = document.getElementById("confirm_password").value;
+            if (password != confirm_password) {
+                alert("Passwords do not match");
+                return false;
+            }
+            var phone = document.getElementsByName("phone")[0].value;
+            if (phone.length != 10) {
+                alert("Phone number should be 10 digits");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>
